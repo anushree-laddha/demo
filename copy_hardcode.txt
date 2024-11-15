@@ -1,0 +1,95 @@
+#include <stdio.h>   // Include the standard I/O library for file operations.
+#include <stdlib.h>  // Include the standard library for memory management and program exit.
+
+
+// Function to copy a file character by character
+void copyFileCharacterByCharacter(const char *sourceFile, const char *destFile) {
+    // Open the source file for reading ('r') and the destination file for writing ('w')
+    FILE *src = fopen(sourceFile, "r");
+    FILE *dest = fopen(destFile, "w");
+
+    // Check if both files are opened successfully
+    if (src == NULL || dest == NULL) {
+        perror("Error opening file");  // If opening files failed, print an error message
+        exit(1);                       // Exit the program with an error code
+    }
+
+    char ch;  // Variable to store each character read from the source file
+    // Loop through the source file, reading each character until end of file (EOF)
+    while ((ch = fgetc(src)) != EOF) {
+        fputc(ch, dest);  // Write the character to the destination file
+    }
+
+    // Inform the user that the file has been copied successfully
+    printf("File copied character by character successfully.\n");
+
+    // Close both the source and destination files
+    fclose(src);
+    fclose(dest);
+}
+
+
+// Function to copy a file line by line
+void copyFileLineByLine(const char *sourceFile, const char *destFile) {
+    // Open the source file for reading ('r') and the destination file for writing ('w')
+    FILE *src = fopen(sourceFile, "r");
+    FILE *dest = fopen(destFile, "w");
+
+    // Check if both files are opened successfully
+    if (src == NULL || dest == NULL) {
+        perror("Error opening file");  // If opening files failed, print an error message
+        exit(1);                       // Exit the program with an error code
+    }
+
+    char line[1024];  // Array to store each line read from the source file
+    // Loop through the source file, reading each line until EOF
+    while (fgets(line, sizeof(line), src) != NULL) {
+        fputs(line, dest);  // Write the line to the destination file
+    }
+
+    // Inform the user that the file has been copied successfully
+    printf("File copied line by line successfully.\n");
+
+    // Close both the source and destination files
+    fclose(src);
+    fclose(dest);
+}
+
+
+int main() {
+    // Hardcoded filenames for source and destination files for character-by-character copy
+    const char *sourceFile = "source.txt";             // Source file name
+    const char *destFileChar = "dest_char.txt";        // Destination file for character copy
+    const char *destFileLine = "dest_line.txt";        // Destination file for line copy
+
+    // Hardcoded content to be written to the source file
+    const char *content = "This is a sample text file.\nIt contains several lines.\nThis file will be copied character by character and line by line.\n";
+
+    // Open the source file for writing ('w') to add content
+    FILE *src = fopen(sourceFile, "w");
+
+    // Check if the file is opened successfully
+    if (src == NULL) {
+        perror("Error opening source file");  // If the file can't be opened, print an error message
+        exit(1);                             // Exit the program with an error code
+    }
+
+    // Write the hardcoded content to the source file
+    fputs(content, src);
+
+    // Close the source file after writing the content
+    fclose(src);
+
+    // Inform the user that content has been written to the source file
+    printf("Content written to the source file: %s\n", sourceFile);
+
+    // Perform the character-by-character file copy
+    printf("\nCopying file character by character...\n");
+    copyFileCharacterByCharacter(sourceFile, destFileChar);
+
+    // Perform the line-by-line file copy
+    printf("\nCopying file line by line...\n");
+    copyFileLineByLine(sourceFile, destFileLine);
+
+    return 0;  // Exit the program successfully
+}
